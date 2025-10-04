@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Signup</title>
+</head>
+<body>
+    <h1>Hello, Mr. Admin, Please Enter your details below</h1>
+    
+    <form action="/signup" method="post">
+        <label for="name">Name: </label>
+        <input type="text" name="name" id="name" placeholder="eg. Aditya Raj" required><br><br>
+        
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" placeholder="eg. abhishek@gmail.com" required><br><br>
+        
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" placeholder="Choose a secure password" required><br><br>
+        
+        <label for="confirm_password">Confirm Password: </label>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Repeat your password" required><br><br>
+
+        <span id="match-message"></span><br>
+        <button type="submit">Submit</button>
+    </form>
+    
+    <script>
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        const matchMessage = document.getElementById('match-message');
+
+        confirmPasswordInput.addEventListener('keyup', () => {
+            if (passwordInput.value === confirmPasswordInput.value) {
+                matchMessage.textContent = '✅ Passwords match!';
+                matchMessage.style.color = 'green';
+            } else {
+                matchMessage.textContent = '❌ Passwords do not match!';
+                matchMessage.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
