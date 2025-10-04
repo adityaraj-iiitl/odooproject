@@ -46,10 +46,44 @@ def login():
         flash("Invalid email or password.", "error")
         return redirect(url_for('home'))
 
+# Find the @app.route("/signup"...) function in app.py and replace it with this
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    # ... (your signup code remains the same)
-    return render_template("signup.html") # Simplified for brevity
+    # This block handles the form submission when the method is POST
+    if request.method == "POST":
+        company_name = request.form["company_name"]
+        admin_name = request.form["name"]
+        email = request.form["email"]
+        country = request.form["country"]
+        password = request.form["password"]
+
+        currency = COUNTRY_CURRENCY_MAP.get(country, "USD")
+
+        conn = get_db_connection()
+        try:
+            # Step 1: Create the new company
+            cursor = conn.execute("INSERT INTO companies (name, currency) VALUES (?, ?)", (company_name, currency))
+            company_id = cursor.lastrowid
+
+            # Step 2: Create the new admin user
+            conn.execute("INSERT INTO users (name, email, password, role, company_id) VALUES (?, ?, ?, ?, ?)",
+                      (admin_name, email, password, "Admin", company_id))
+            conn.commit()
+        except sqlite3.IntegrityError:
+            flash(f"Error: The email '{email}' already exists.", "error")
+            conn.close()
+            # If email exists, just show the signup page again with an error
+            return redirect(url_for('signup'))
+        finally:
+            conn.close()
+
+        # This is the crucial line for a successful signup
+        flash("Signup successful! Please log in.", "success")
+        return redirect(url_for('home'))
+
+    # This line runs for a GET request to simply show the page
+    return render_template("signup.html")
 
 @app.route("/logout")
 def logout():
