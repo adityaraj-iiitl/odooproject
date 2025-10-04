@@ -18,10 +18,30 @@
         
         <label for="confirm_password">Confirm Password: </label>
         <input type="password" name="confirm_password" id="confirm_password" placeholder="Repeat your password" required><br><br>
+        
+        <select id="country" name="country">
+        </select>
 
         <span id="match-message"></span><br>
         <button type="submit">Submit</button>
     </form>
+    
+    <script>
+        // Use a public API to fetch country data
+        fetch('https://restcountries.com/v3.1/all?fields=name')
+            .then(response => response.json())
+            .then(data => {
+                const selectElement = document.getElementById('country');
+                data.forEach(country => {
+                    // Create an <option> tag for each country
+                    const option = document.createElement('option');
+                    option.value = country.name.common;
+                    option.textContent = country.name.common;
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching countries:', error));
+    </script>
     
     <script>
         const passwordInput = document.getElementById('password');
