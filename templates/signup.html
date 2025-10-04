@@ -4,26 +4,31 @@
     <title>Admin Signup</title>
 </head>
 <body>
-    <h1>Hello, Mr. Admin, Please Enter your details below</h1>
+    <h1>Company & Admin Signup</h1>
     
     <form action="/signup" method="post">
-        <label for="name">Name: </label>
+        <label for="company_name">Company Name: </label>
+        <input type="text" name="company_name" id="company_name" placeholder="eg. My Awesome Inc." required><br><br>
+
+        <label for="name">Your Name (Admin): </label>
         <input type="text" name="name" id="name" placeholder="eg. Aditya Raj" required><br><br>
         
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" placeholder="eg. abhishek@gmail.com" required><br><br>
+        <label for="email">Your Email: </label>
+        <input type="email" name="email" id="email" placeholder="eg. aditya@example.com" required><br><br>
         
+        <label for="country">Country: </label>
+        <select id="country" name="country" required>
+            <option value="">--Loading Countries--</option>
+        </select><br><br>
+
         <label for="password">Password: </label>
         <input type="password" name="password" id="password" placeholder="Choose a secure password" required><br><br>
         
         <label for="confirm_password">Confirm Password: </label>
         <input type="password" name="confirm_password" id="confirm_password" placeholder="Repeat your password" required><br><br>
         
-        <select id="country" name="country">
-        </select>
-
         <span id="match-message"></span><br>
-        <button type="submit">Submit</button>
+        <button type="submit">Create Company and Sign Up</button>
     </form>
     
     <script>
@@ -32,8 +37,12 @@
             .then(response => response.json())
             .then(data => {
                 const selectElement = document.getElementById('country');
+                // Sort countries alphabetically
+                data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+                
+                selectElement.innerHTML = '<option value="">--Select a Country--</option>'; // Clear loading message
+
                 data.forEach(country => {
-                    // Create an <option> tag for each country
                     const option = document.createElement('option');
                     option.value = country.name.common;
                     option.textContent = country.name.common;
@@ -44,6 +53,7 @@
     </script>
     
     <script>
+        // Password matching script (no changes here)
         const passwordInput = document.getElementById('password');
         const confirmPasswordInput = document.getElementById('confirm_password');
         const matchMessage = document.getElementById('match-message');
