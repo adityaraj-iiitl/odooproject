@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .container { display: flex; gap: 40px; }
+        .left-panel { flex: 1; }
+        .right-panel { flex: 2; }
+    </style>
+</head>
+<body>
+    <h1>Welcome, Admin {{ session['name'] }}!</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <hr>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: {% if category == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if category == 'error' %}#721c24{% else %}#155724{% endif %};">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <div class="left-panel">
+            <h2>Create a New User</h2>
+            <form action="{{ url_for('add_user') }}" method="post">
+                <label for="name">Name:</label><br>
+                <input type="text" name="name" id="name" required><br><br>
+
+                <label for="email">Email:</label><br>
+                <input type="email" name="email" id="email" required><br><br>
+
+                <label for="role">Role:</label><br>
+                <select name="role" id="role" required>
+                    <option value="Employee">Employee</option>
+                    <option value="Manager">Manager</option>
+                </select><br><br>
+
+                <button type="submit">Create User</button>
+            </form>
+        </div>
+
+        <div class="right-panel">
+            <h2>Manage Users & Relationships</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Manager</th>
+                        <th>Assign Manager</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user['name'] }}</td>
+                        <td>{{ user['email'] }}</td>
+                        <td>{{ user['role'] }}</td>
+                        <td>{{ user['manager_name'] or 'N/A' }}</td>
+                        <td>
+                            {% if user['role'] == 'Employee' %}
+                            <form action="{{ url_for('assign_manager') }}" method="post">
+                                <input type="hidden" name="employee_id" value="{{ user['id'] }}">
+                                <select name="manager_id" required>
+                                    <option value="">--Select Manager--</option>
+                                    {% for manager in managers %}
+                                    <option value="{{ manager['id'] }}">{{ manager['name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit">Assign</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
