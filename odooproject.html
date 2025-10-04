@@ -1,0 +1,37 @@
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <h1>Hello , Mr. Admin , Please Enter your details below </h1>
+        <form >
+            <label name="name">Name: </label>
+            <input type="text" name="name" id="name " placeholder="eg. Aditya Raj"><br>
+            <label email="email">Email: </label>
+            <input type="email" name ="email" id="email" placeholder="eg abhishekdige@gmail.com"><br>
+            <label password="password">Password: </label>
+            <input type="password" name="password" id="password" placeholder="7005@Krishna"><br>
+            <label confirm_password="confirmpassword">Confirm Password: </label>
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="7005@Krishna"><br>
+          <span id="match-message"></span><br>
+        <button type="submit">Submit</button>
+        
+        </form>
+         <script>
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        const matchMessage = document.getElementById('match-message');
+
+        confirmPasswordInput.addEventListener('keyup', () => {
+            if (passwordInput.value === confirmPasswordInput.value) {
+                matchMessage.textContent = 'Passwords match!';
+                matchMessage.style.color = 'green';
+            } else {
+                matchMessage.textContent = 'Passwords do not match!';
+                matchMessage.style.color = 'red';
+            }
+        });
+    </script>
+
+    </body>
+</html>
